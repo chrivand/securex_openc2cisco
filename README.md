@@ -9,8 +9,8 @@ This is a set of SecureX orchestrator workflows to take action on [OPENC2 comman
 * Triggers based on webhook with OPENC2 command in request body;
 * Parses OPENC2 command and takes action on: `deny`, `allow`, `contain` and `restore ` OPENC2 action types;
 * Depending on OPENC2 target specific Cisco Security solutions are triggered:
-  * `deny` and `allow` actions with `IPv4` or `IPv6` targets will trigger Firepower;
-  * `deny` and `allow` actions with `domain` targets will trigger Umbrella;
+  * `deny` and `allow` actions with `IPv4` or `IPv6` targets will trigger Cisco Secure Firewall (Firepower);
+  * `deny` and `allow` actions with `domain` targets will trigger Cisco Umbrella;
   * `deny` and `allow` actions with `sha256` targets will trigger Cisco Secure Endpoint (AMP);
   * `contain` and `restore` actions with `IPv4` or `IPv6` targets will trigger Cisco Secure Endpoint (AMP) and/or Cisco Identity Services Engine.
 * Uses [Hashicorp Vault](https://www.vaultproject.io/) to retrieve API keys for various Cisco solutions;
@@ -18,9 +18,10 @@ This is a set of SecureX orchestrator workflows to take action on [OPENC2 comman
 * Creates case in SecureX Casebook for Security Operations Center (SOC) or other help desk.
 
 ## Roadmap
-* Add `domain` support for Firepower;
-* Add `IPv4` and `IPv6` support for Umbrella Cloud Delivered Firewall;
-* Add `mac_address` and `hostname` support for Cisco Secure Endpoint (AMP) and/or Cisco Identity Services Engine;
+* Add `query` action support for Cisco Identity Services Engine and Microsoft Active Directory;
+* Add `domain` target support for Cisco Secure Firewall (Firepower);
+* Add `IPv4` and `IPv6` target support for Umbrella Cloud Delivered Firewall;
+* Add `mac_address` and `hostname` target support for Cisco Secure Endpoint (AMP) and/or Cisco Identity Services Engine;
 * More to be announced...
 
 > **Note:** Please test this properly before implementing in a production environment. This is a sample workflow!
@@ -29,8 +30,7 @@ This is a set of SecureX orchestrator workflows to take action on [OPENC2 comman
 - CTR_For_Access_Token (default)
 - CTR_API (default)
 - Cisco Webex 
-- Cisco Firepower Management Center
-- Cisco Umbrella
+- Cisco Secure Firewall (Firepower)- Cisco Umbrella
 - Cisco Secure Endpoint (AMP)
 - Cisco Identity Services Engine
 
