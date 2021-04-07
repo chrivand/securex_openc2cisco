@@ -2,6 +2,8 @@
 [![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/<REPO-HERE>)
 
 # Cisco SecureX orchestrator workflows to take action on OPENC2 command and controls
+This is a set of SecureX orchestrator workflows to take action on [OPENC2 command and controls](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.html).
+
 
 ## Features
 * Triggers based on webhook with OPENC2 command in request body;
@@ -10,12 +12,13 @@
   * `deny` and `allow` actions with `IPv4` or `IPv6` targets will trigger Firepower;
   * `deny` and `allow` actions with `domain` targets will trigger Umbrella;
   * `deny` and `allow` actions with `sha256` targets will trigger Cisco Secure Endpoint (AMP);
-  * `contain` and `restore` actions with `IPv4` or `IPv6` targets will trigger Cisco Secure Endpoint (AMP) and/or Cisco Identity Services Engine;
+  * `contain` and `restore` actions with `IPv4` or `IPv6` targets will trigger Cisco Secure Endpoint (AMP) and/or Cisco Identity Services Engine.
 
 ## Roadmap
 * Add `domain` support for Firepower;
 * Add `IPv4` and `IPv6` support for Umbrella Cloud Delivered Firewall;
 * Add `mac_address` and `hostname` support for Cisco Secure Endpoint (AMP) and/or Cisco Identity Services Engine;
+* More to be announced...
 
 > **Note:** Please test this properly before implementing in a production environment. This is a sample workflow!
 
