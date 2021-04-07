@@ -7,12 +7,15 @@ This is a set of SecureX orchestrator workflows to take action on [OPENC2 comman
 
 ## Features
 * Triggers based on webhook with OPENC2 command in request body;
-* Parses OPENC2 command and takes action on: `deny`, `allow`, `contain` and `restore ` OPENC2 action types.
+* Parses OPENC2 command and takes action on: `deny`, `allow`, `contain` and `restore ` OPENC2 action types;
 * Depending on OPENC2 target specific Cisco Security solutions are triggered:
   * `deny` and `allow` actions with `IPv4` or `IPv6` targets will trigger Firepower;
   * `deny` and `allow` actions with `domain` targets will trigger Umbrella;
   * `deny` and `allow` actions with `sha256` targets will trigger Cisco Secure Endpoint (AMP);
   * `contain` and `restore` actions with `IPv4` or `IPv6` targets will trigger Cisco Secure Endpoint (AMP) and/or Cisco Identity Services Engine.
+* Uses [Hashicorp Vault](https://www.vaultproject.io/) to retrieve API keys for various Cisco solutions;
+* Creates Webex alerts messages for Security Operations Center (SOC) or other help desk;
+* Creates case in SecureX Casebook for Security Operations Center (SOC) or other help desk.
 
 ## Roadmap
 * Add `domain` support for Firepower;
