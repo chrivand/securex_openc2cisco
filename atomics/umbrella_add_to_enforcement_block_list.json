@@ -1,0 +1,178 @@
+{
+  "workflow": {
+    "unique_name": "definition_workflow_01NDROVBAGI204ezP5JUAOO9GveUtjfL6vH",
+    "name": "block with enforcement API [CHRIVAND]",
+    "title": "block with enforcement API [CHRIVAND]",
+    "type": "generic.workflow",
+    "base_type": "workflow",
+    "variables": [
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "input",
+          "name": "domain_to_block",
+          "type": "datatype.string",
+          "is_required": true,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01NDRPB7ZUFRD4ClfYBYk4UffE7OpfwAFRK",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "input",
+          "name": "UMB_ customerKey",
+          "type": "datatype.string",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01NDRT12523Q52H5RW7X0mNgyF6lnhqOzKW",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.secure_string",
+        "properties": {
+          "value": "",
+          "scope": "input",
+          "name": "UMB_ customerKey_secure",
+          "type": "datatype.secure_string",
+          "is_required": true,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01NKEXGCE5C0L4iEfSLaUJcmTMSMB2dgtQ6",
+        "object_type": "variable_workflow"
+      }
+    ],
+    "properties": {
+      "atomic": {
+        "atomic_group": "Atomic",
+        "is_atomic": true
+      },
+      "delete_workflow_instance": false,
+      "display_name": "block with enforcement API [CHRIVAND]",
+      "runtime_user": {
+        "override_target_runtime_user": false,
+        "specify_on_workflow_start": false,
+        "target_default": true
+      },
+      "target": {
+        "no_target": true
+      }
+    },
+    "object_type": "definition_workflow",
+    "actions": [
+      {
+        "unique_name": "definition_activity_01NDRPEA8MWDY1tHWGGHnjkXPfezEinjfBU",
+        "name": "HTTP Request",
+        "title": "POST Enforcement API",
+        "type": "web-service.http_request",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 180,
+          "allow_auto_redirect": true,
+          "body": "{\n    \"alertTime\": \"2013-02-08T11:14:26.0Z\",\n    \"deviceId\": \"ba6a59f4-e692-4724-ba36-c28132c761de\",\n    \"deviceVersion\": \"13.7a\",\n    \"dstDomain\": \"$workflow.definition_workflow_01NDROVBAGI204ezP5JUAOO9GveUtjfL6vH.input.variable_workflow_01NDRPB7ZUFRD4ClfYBYk4UffE7OpfwAFRK$\",\n    \"dstUrl\": \"http://$workflow.definition_workflow_01NDROVBAGI204ezP5JUAOO9GveUtjfL6vH.input.variable_workflow_01NDRPB7ZUFRD4ClfYBYk4UffE7OpfwAFRK$/a-bad-url\",\n    \"eventTime\": \"2013-02-08T09:30:26.0Z\",\n    \"protocolVersion\": \"1.0a\",\n    \"providerName\": \"Security Platform\"\n}",
+          "content_type": "application/json",
+          "continue_on_error_status_code": false,
+          "continue_on_failure": false,
+          "display_name": "POST Enforcement API",
+          "method": "POST",
+          "relative_url": "/1.0/events?&customerKey=$workflow.definition_workflow_01NDROVBAGI204ezP5JUAOO9GveUtjfL6vH.input.variable_workflow_01NKEXGCE5C0L4iEfSLaUJcmTMSMB2dgtQ6$",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "override_workflow_target": true,
+            "target_id": "definition_target_01NDRS52VI0ZQ2cXlNiSsffQuCiUqQ19toA"
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01NDRUKGUUIKF6vmtQWQWVM1TDQQHgMzOHb",
+        "name": "Condition Block",
+        "title": "POST 202?",
+        "type": "logic.if_else",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "POST 202?",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01NDRUKUYUZ6H5cXF5xq5EwiJ5lgFzb9bqI",
+            "name": "Condition Branch",
+            "title": "NOT 202",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$activity.definition_activity_01NDRPEA8MWDY1tHWGGHnjkXPfezEinjfBU.output.status_code$",
+                "operator": "ne",
+                "right_operand": 202
+              },
+              "continue_on_failure": false,
+              "display_name": "NOT 202",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01NDRVBC0DFBB1CLIL5P5EJMjbgg76jIt7H",
+                "name": "Completed",
+                "title": "Failed",
+                "type": "logic.completed",
+                "base_type": "activity",
+                "properties": {
+                  "completion_type": "failed-completed",
+                  "continue_on_failure": false,
+                  "display_name": "Failed",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "categories": [
+      "category_01NSVQ3I7KAC91UswmYqhF821IBEyoUSyDY"
+    ]
+  },
+  "categories": {
+    "category_01NSVQ3I7KAC91UswmYqhF821IBEyoUSyDY": {
+      "unique_name": "category_01NSVQ3I7KAC91UswmYqhF821IBEyoUSyDY",
+      "name": "SXO_hackathon",
+      "title": "SXO_hackathon",
+      "type": "basic.category",
+      "base_type": "category",
+      "category_type": "custom",
+      "object_type": "category"
+    }
+  },
+  "targets": {
+    "definition_target_01NDRS52VI0ZQ2cXlNiSsffQuCiUqQ19toA": {
+      "unique_name": "definition_target_01NDRS52VI0ZQ2cXlNiSsffQuCiUqQ19toA",
+      "name": "UMB_enforcement",
+      "title": "UMB_enforcement",
+      "type": "web-service.endpoint",
+      "base_type": "target",
+      "object_type": "definition_target",
+      "properties": {
+        "disable_certificate_validation": false,
+        "display_name": "UMB_enforcement",
+        "host": "s-platform.api.opendns.com",
+        "ignore_proxy": false,
+        "no_runtime_user": true,
+        "protocol": "https"
+      }
+    }
+  }
+}
