@@ -1,0 +1,142 @@
+{
+  "workflow": {
+    "unique_name": "definition_workflow_01NPPQB34Z1IS1vlE1QuF8zhC3M4ScRejNa",
+    "name": "AMP Add to block list [CHRIVAND]",
+    "title": "AMP Add to block list [CHRIVAND]",
+    "type": "generic.workflow",
+    "base_type": "workflow",
+    "variables": [
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "d5221f6847978682234cb8ebfa951cb56b1323658679a820b168bbc1f5261a3b",
+          "scope": "input",
+          "name": "AMP_file_sha256",
+          "type": "datatype.string",
+          "is_required": true,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01NPPU08LSF3T0djNOMtlEGC8WPHhuzGWKV",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "d284ba56-533b-464f-bd00-48aa9a72fcc4",
+          "scope": "input",
+          "name": "AMP_filelist_guid",
+          "type": "datatype.string",
+          "is_required": true,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01NPPRWUZUBPG43R8gK11NJU1DrqoSOB0ub",
+        "object_type": "variable_workflow"
+      }
+    ],
+    "properties": {
+      "atomic": {
+        "atomic_group": "Atomic",
+        "is_atomic": true
+      },
+      "delete_workflow_instance": false,
+      "display_name": "AMP Add to block list [CHRIVAND]",
+      "runtime_user": {
+        "target_default": true
+      },
+      "target": {
+        "target_type": "web-service.endpoint",
+        "specify_on_workflow_start": true
+      }
+    },
+    "object_type": "definition_workflow",
+    "actions": [
+      {
+        "unique_name": "definition_activity_01NPPQF4BFMNX7Ar455s4Wsf8OGS7YtNFLo",
+        "name": "HTTP Request",
+        "title": "AMP Add to block list",
+        "type": "web-service.http_request",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 180,
+          "allow_auto_redirect": true,
+          "continue_on_error_status_code": false,
+          "continue_on_failure": false,
+          "display_name": "AMP Add to block list",
+          "method": "POST",
+          "relative_url": "/file_lists/$workflow.definition_workflow_01NPPQB34Z1IS1vlE1QuF8zhC3M4ScRejNa.input.variable_workflow_01NPPRWUZUBPG43R8gK11NJU1DrqoSOB0ub$/files/$workflow.definition_workflow_01NPPQB34Z1IS1vlE1QuF8zhC3M4ScRejNa.input.variable_workflow_01NPPU08LSF3T0djNOMtlEGC8WPHhuzGWKV$",
+          "runtime_user": {
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "use_workflow_target": true
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01NPPUVUK5KOX2wAIGnmlUbkRzqUbezdBOC",
+        "name": "Condition Block",
+        "title": "201 status code?",
+        "type": "logic.if_else",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "201 status code?",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01NPPUVY4KX8D6TirGQCwslQTAGEElstEQx",
+            "name": "Condition Branch",
+            "title": "not 201",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$activity.definition_activity_01NPPQF4BFMNX7Ar455s4Wsf8OGS7YtNFLo.output.status_code$",
+                "operator": "ne",
+                "right_operand": 201
+              },
+              "continue_on_failure": false,
+              "display_name": "not 201",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01NPPV9VBDRX51UO1w3dZVBDgp0nBFJpCBc",
+                "name": "Completed",
+                "title": "FAILED",
+                "type": "logic.completed",
+                "base_type": "activity",
+                "properties": {
+                  "completion_type": "failed-completed",
+                  "continue_on_failure": false,
+                  "display_name": "FAILED",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "categories": [
+      "category_01NSVQ3I7KAC91UswmYqhF821IBEyoUSyDY"
+    ]
+  },
+  "categories": {
+    "category_01NSVQ3I7KAC91UswmYqhF821IBEyoUSyDY": {
+      "unique_name": "category_01NSVQ3I7KAC91UswmYqhF821IBEyoUSyDY",
+      "name": "SXO_hackathon",
+      "title": "SXO_hackathon",
+      "type": "basic.category",
+      "base_type": "category",
+      "category_type": "custom",
+      "object_type": "category"
+    }
+  }
+}
