@@ -1,0 +1,355 @@
+{
+  "workflow": {
+    "unique_name": "definition_workflow_01N85BIKXAQI44yzHtET82OJ7wiukYXRwzy",
+    "name": "Read Vault Secrets",
+    "title": "Read Vault Secrets",
+    "type": "generic.workflow",
+    "base_type": "workflow",
+    "variables": [
+      {
+        "schema_id": "datatype.secure_string",
+        "properties": {
+          "value": "*****",
+          "scope": "local",
+          "name": "Vault API Token",
+          "type": "datatype.secure_string",
+          "is_required": true,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01N85BIKNHLTO28WebmtLQKeFGJUfrWGeaU",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "admin",
+          "scope": "local",
+          "name": "Vault Namespace",
+          "type": "datatype.string",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01N85BIKNHKKY21XyOJqsH3GqlVwKOMAF7W",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "output",
+          "name": "umbrella-enforcement-key",
+          "type": "datatype.string",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01NDUTJ6MQKX21xGkGEZK1Cz7zzr4rjcqgl",
+        "object_type": "variable_workflow"
+      }
+    ],
+    "properties": {
+      "atomic": {
+        "atomic_group": "Atomic",
+        "is_atomic": true
+      },
+      "delete_workflow_instance": false,
+      "display_name": "Read Vault Secrets",
+      "runtime_user": {
+        "target_default": true
+      },
+      "target": {
+        "no_target": true
+      }
+    },
+    "object_type": "definition_workflow",
+    "actions": [
+      {
+        "unique_name": "definition_activity_01N9MQ7K5QEF45RXU5fwcEo6kHG5X0o5dj7",
+        "name": "Parallel Block",
+        "title": "Parallel Block",
+        "type": "logic.parallel",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Parallel Block",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01N9MQ7NC53LE5HVExhXJjqQLb8PMb3RzR7",
+            "name": "Parallel Branch",
+            "title": "Parallel Branch",
+            "type": "logic.parallel_block",
+            "base_type": "activity",
+            "properties": {
+              "continue_on_failure": false,
+              "display_name": "Parallel Branch",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01N85BIWOITLJ2e0xHDiXL8e4d3JaUpL2PH",
+                "name": "HTTP Request",
+                "title": "Get Umbrella Secret",
+                "type": "web-service.http_request",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "allow_auto_redirect": true,
+                  "continue_on_error_status_code": false,
+                  "continue_on_failure": false,
+                  "custom_headers": [
+                    {
+                      "name": "X-Vault-Token",
+                      "value": "$workflow.definition_workflow_01N85BIKXAQI44yzHtET82OJ7wiukYXRwzy.local.variable_workflow_01N85BIKNHLTO28WebmtLQKeFGJUfrWGeaU$"
+                    },
+                    {
+                      "name": "X-Vault-Namespace",
+                      "value": "$workflow.definition_workflow_01N85BIKXAQI44yzHtET82OJ7wiukYXRwzy.local.variable_workflow_01N85BIKNHKKY21XyOJqsH3GqlVwKOMAF7W$"
+                    }
+                  ],
+                  "display_name": "Get Umbrella Secret",
+                  "method": "GET",
+                  "relative_url": "/v1/kv-v1/devnet/umbrella",
+                  "runtime_user": {
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_01N7ZS5FT1FY50J3o6ZGkplYK13w4JKYWLb"
+                  }
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01N9NUXDGYQ4C4SNFWN0OICC6L1cjQM4r0K",
+                "name": "JSONPath Query",
+                "title": "umbrella-enforcement-key",
+                "type": "corejava.jsonpathquery",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "display_name": "umbrella-enforcement-key",
+                  "input_json": "$activity.definition_activity_01N85BIWOITLJ2e0xHDiXL8e4d3JaUpL2PH.output.response_body$",
+                  "jsonpath_queries": [
+                    {
+                      "jsonpath_query": "$.data.umbrella-enforcement-key",
+                      "jsonpath_query_name": "umbrella-enforcement-key",
+                      "jsonpath_query_type": "string"
+                    }
+                  ],
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01NDUT3WHD7D92bMRCDLdgYQP1b78S5h5ef",
+                "name": "Set Variables",
+                "title": "set umbrella-enforcement-key",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "set umbrella-enforcement-key",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01N85BIKXAQI44yzHtET82OJ7wiukYXRwzy.output.variable_workflow_01NDUTJ6MQKX21xGkGEZK1Cz7zzr4rjcqgl$",
+                      "variable_value_new": "$activity.definition_activity_01N9NUXDGYQ4C4SNFWN0OICC6L1cjQM4r0K.output.jsonpath_queries.umbrella-enforcement-key$"
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          },
+          {
+            "unique_name": "definition_activity_01N9MQ7OZWRI20djlIBQ6bHwSnGoLKvox5z",
+            "name": "Parallel Branch",
+            "title": "Parallel Branch",
+            "type": "logic.parallel_block",
+            "base_type": "activity",
+            "properties": {
+              "continue_on_failure": false,
+              "display_name": "Parallel Branch",
+              "skip_execution": true
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01N9NXD330PQH5tYPtPLvpxwcLyrWDt8W3m",
+                "name": "HTTP Request",
+                "title": "Get DNAC Secret",
+                "type": "web-service.http_request",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "allow_auto_redirect": true,
+                  "continue_on_error_status_code": false,
+                  "continue_on_failure": false,
+                  "custom_headers": [
+                    {
+                      "name": "X-Vault-Token",
+                      "value": "$workflow.definition_workflow_01N85BIKXAQI44yzHtET82OJ7wiukYXRwzy.local.variable_workflow_01N85BIKNHLTO28WebmtLQKeFGJUfrWGeaU$"
+                    },
+                    {
+                      "name": "X-Vault-Namespace",
+                      "value": "$workflow.definition_workflow_01N85BIKXAQI44yzHtET82OJ7wiukYXRwzy.local.variable_workflow_01N85BIKNHKKY21XyOJqsH3GqlVwKOMAF7W$"
+                    }
+                  ],
+                  "display_name": "Get DNAC Secret",
+                  "method": "GET",
+                  "relative_url": "/v1/kv-v1/devnet/dnac/sb1",
+                  "runtime_user": {
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_01N7ZS5FT1FY50J3o6ZGkplYK13w4JKYWLb"
+                  }
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01N9NW8HWPKRC3TkqnxwvLFhnu1x66zcZI6",
+                "name": "JSONPath Query",
+                "title": "dnac-key",
+                "type": "corejava.jsonpathquery",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "display_name": "dnac-key",
+                  "input_json": "$activity.definition_activity_01N9NXD330PQH5tYPtPLvpxwcLyrWDt8W3m.output.response_body$",
+                  "jsonpath_queries": [
+                    {
+                      "jsonpath_query": "$.data.username",
+                      "jsonpath_query_name": "username",
+                      "jsonpath_query_type": "string"
+                    },
+                    {
+                      "jsonpath_query": "$.data.password",
+                      "jsonpath_query_name": "password",
+                      "jsonpath_query_type": "string"
+                    }
+                  ],
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          },
+          {
+            "unique_name": "definition_activity_01N9NXIIXQ5QP0OGXfGQU5zM7M3f2bH9RAL",
+            "name": "Parallel Branch",
+            "title": "Parallel Branch",
+            "type": "logic.parallel_block",
+            "base_type": "activity",
+            "properties": {
+              "continue_on_failure": false,
+              "display_name": "Parallel Branch",
+              "skip_execution": true
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01N9NXIL5JII540NFNZiXuiwiIfaxIeGqsG",
+                "name": "HTTP Request",
+                "title": "Get FMC Secret",
+                "type": "web-service.http_request",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "allow_auto_redirect": true,
+                  "continue_on_error_status_code": false,
+                  "continue_on_failure": false,
+                  "custom_headers": [
+                    {
+                      "name": "X-Vault-Token",
+                      "value": "$workflow.definition_workflow_01N85BIKXAQI44yzHtET82OJ7wiukYXRwzy.local.variable_workflow_01N85BIKNHLTO28WebmtLQKeFGJUfrWGeaU$"
+                    },
+                    {
+                      "name": "X-Vault-Namespace",
+                      "value": "$workflow.definition_workflow_01N85BIKXAQI44yzHtET82OJ7wiukYXRwzy.local.variable_workflow_01N85BIKNHKKY21XyOJqsH3GqlVwKOMAF7W$"
+                    }
+                  ],
+                  "display_name": "Get FMC Secret",
+                  "method": "GET",
+                  "relative_url": "/v1/kv-v1/devnet/cisco",
+                  "runtime_user": {
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_01N7ZS5FT1FY50J3o6ZGkplYK13w4JKYWLb"
+                  }
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01N9NXIMUI6Q37a6SardAyu21Nz8U1dwKIn",
+                "name": "JSONPath Query",
+                "title": "fmc-key",
+                "type": "corejava.jsonpathquery",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "display_name": "fmc-key",
+                  "input_json": "$activity.definition_activity_01N9NXIL5JII540NFNZiXuiwiIfaxIeGqsG.output.response_body$",
+                  "jsonpath_queries": [
+                    {
+                      "jsonpath_query": "$.data.secret",
+                      "jsonpath_query_name": "secret",
+                      "jsonpath_query_type": "string"
+                    }
+                  ],
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "categories": [
+      "category_01NSVQ3I7KAC91UswmYqhF821IBEyoUSyDY"
+    ]
+  },
+  "categories": {
+    "category_01NSVQ3I7KAC91UswmYqhF821IBEyoUSyDY": {
+      "unique_name": "category_01NSVQ3I7KAC91UswmYqhF821IBEyoUSyDY",
+      "name": "SXO_hackathon",
+      "title": "SXO_hackathon",
+      "type": "basic.category",
+      "base_type": "category",
+      "category_type": "custom",
+      "object_type": "category"
+    }
+  },
+  "targets": {
+    "definition_target_01N7ZS5FT1FY50J3o6ZGkplYK13w4JKYWLb": {
+      "unique_name": "definition_target_01N7ZS5FT1FY50J3o6ZGkplYK13w4JKYWLb",
+      "name": "Vault-aws",
+      "title": "Vault-aws",
+      "type": "web-service.endpoint",
+      "base_type": "target",
+      "object_type": "definition_target",
+      "properties": {
+        "disable_certificate_validation": true,
+        "display_name": "Vault-aws",
+        "host": "vault-cluster.vault.26340c7e-d666-4510-9a37-ac7759c9674b.aws.hashicorp.cloud",
+        "ignore_proxy": false,
+        "no_runtime_user": true,
+        "port": 8200,
+        "protocol": "https"
+      }
+    }
+  }
+}
