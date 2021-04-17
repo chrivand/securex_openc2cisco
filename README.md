@@ -30,7 +30,8 @@ This is a set of SecureX orchestrator workflows to take action on [OPENC2 comman
 - CTR_For_Access_Token (default)
 - CTR_API (default)
 - Cisco Webex 
-- Cisco Secure Firewall (Firepower)- Cisco Umbrella
+- Cisco Secure Firewall (Firepower)
+- Cisco Umbrella
 - Cisco Secure Endpoint (AMP)
 - Cisco Identity Services Engine
 
