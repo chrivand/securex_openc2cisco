@@ -1,0 +1,253 @@
+{
+  "workflow": {
+    "unique_name": "definition_workflow_01NR65Y06VV1U6zY223SXE6Rae52WhUXuKK",
+    "name": "FMC - Update Dynamic Network Object [CHRIVAND]",
+    "title": "FMC - Update Dynamic Network Object [CHRIVAND]",
+    "type": "generic.workflow",
+    "base_type": "workflow",
+    "variables": [
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "input",
+          "name": "IP_to_add_or_remove",
+          "type": "datatype.string",
+          "is_required": true,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01NR65XZTT8F93K0zaCSC7tTjwCQh0Ra1pq",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.secure_string",
+        "properties": {
+          "value": "",
+          "scope": "input",
+          "name": "Auth Access Token",
+          "type": "datatype.secure_string",
+          "is_required": true,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01NR65XZTT24N2b4dvV4ay8jxcUESRbwuqB",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "input",
+          "name": "action",
+          "type": "datatype.string",
+          "description": "add or remove",
+          "is_required": true,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01NR65XZTT7913CLAlThs3iRodojQdsqo4q",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "input",
+          "name": "Domain UUID",
+          "type": "datatype.string",
+          "is_required": true,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01NR65XZTT9JZ2pBNVWo1SE2jMdiU8I54T4",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "input",
+          "name": "objectIdOrName",
+          "type": "datatype.string",
+          "is_required": true,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01NR65XZTT5M30rEtigrHeNVcGxNWT7kbG2",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "output",
+          "name": "Dynamic Object",
+          "type": "datatype.string",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01NR65XZTTAOD3hD2MsLrfhIUyoBIL0ir7Z",
+        "object_type": "variable_workflow"
+      }
+    ],
+    "properties": {
+      "atomic": {
+        "atomic_group": "Cisco FMC",
+        "is_atomic": true
+      },
+      "delete_workflow_instance": true,
+      "description": "Updates the literals of an existing network group for the given domain UUID.\n\n[] Execute the API request to update the network group\n[] Set the output variables with the results",
+      "display_name": "FMC - Update Dynamic Network Object [CHRIVAND]",
+      "runtime_user": {
+        "target_default": true
+      },
+      "target": {
+        "target_type": "web-service.endpoint",
+        "specify_on_workflow_start": true
+      }
+    },
+    "object_type": "definition_workflow",
+    "actions": [
+      {
+        "unique_name": "definition_activity_01NR65YBLPR8P79b5AnBvj6UItgY7hTz7sn",
+        "name": "Execute Python Script",
+        "title": "Generate new group JSON",
+        "type": "python3.script",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 180,
+          "continue_on_failure": false,
+          "display_name": "Generate new group JSON",
+          "script": "import sys,json\nip_address = sys.argv[1]\nip_dict = {\n  \"mappings\": [ip_address],\n  \"type\": \"DynamicObjectMappings\"\n}\nip_json = json.dumps(ip_dict)",
+          "script_arguments": [
+            "$workflow.definition_workflow_01NR65Y06VV1U6zY223SXE6Rae52WhUXuKK.input.variable_workflow_01NR65XZTT8F93K0zaCSC7tTjwCQh0Ra1pq$"
+          ],
+          "script_queries": [
+            {
+              "script_query": "ip_json",
+              "script_query_name": "ip_json",
+              "script_query_type": "string"
+            }
+          ],
+          "skip_execution": false
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01NR65YGD1656415FQKBscpZvyfz4HsrTgl",
+        "name": "HTTP Request",
+        "title": "Execute API request",
+        "type": "web-service.http_request",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 180,
+          "allow_auto_redirect": true,
+          "body": "$activity.definition_activity_01NR65YBLPR8P79b5AnBvj6UItgY7hTz7sn.output.script_queries.ip_json$",
+          "content_type": "application/json",
+          "continue_on_error_status_code": false,
+          "continue_on_failure": false,
+          "custom_headers": [
+            {
+              "name": "X-auth-access-token",
+              "value": "$workflow.definition_workflow_01NR65Y06VV1U6zY223SXE6Rae52WhUXuKK.input.variable_workflow_01NR65XZTT24N2b4dvV4ay8jxcUESRbwuqB$"
+            }
+          ],
+          "display_name": "Execute API request",
+          "method": "PUT",
+          "relative_url": "fmc_config/v1/domain/$workflow.definition_workflow_01NR65Y06VV1U6zY223SXE6Rae52WhUXuKK.input.variable_workflow_01NR65XZTT9JZ2pBNVWo1SE2jMdiU8I54T4$/object/dynamicobjects/$workflow.definition_workflow_01NR65Y06VV1U6zY223SXE6Rae52WhUXuKK.input.variable_workflow_01NR65XZTT5M30rEtigrHeNVcGxNWT7kbG2$/mappings?action=$workflow.definition_workflow_01NR65Y06VV1U6zY223SXE6Rae52WhUXuKK.input.variable_workflow_01NR65XZTT7913CLAlThs3iRodojQdsqo4q$",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "override_workflow_target": false,
+            "override_workflow_target_group_criteria": false,
+            "use_workflow_target": true,
+            "use_workflow_target_group": false
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01NSVRXIAP26R5WBZEZzntrQaXbFjalGD4u",
+        "name": "Condition Block",
+        "title": "API call 201?",
+        "type": "logic.if_else",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "API call 201?",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01NSVRXMCDNOL4JayVl8hczffLpsaQHBQKA",
+            "name": "Condition Branch",
+            "title": "NO",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$activity.definition_activity_01NR65YGD1656415FQKBscpZvyfz4HsrTgl.output.status_code$",
+                "operator": "ne",
+                "right_operand": 201
+              },
+              "continue_on_failure": false,
+              "display_name": "NO",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01NSVS01OAAXA245o4z2MlZeKvYBjEZxuU7",
+                "name": "Completed",
+                "title": "Failed",
+                "type": "logic.completed",
+                "base_type": "activity",
+                "properties": {
+                  "completion_type": "failed-completed",
+                  "continue_on_failure": false,
+                  "display_name": "Failed",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "unique_name": "definition_activity_01NR65YLZMTX014WHtemr2QK6WHF21cUHVb",
+        "name": "Set Variables",
+        "title": "Set output variables",
+        "type": "core.set_multiple_variables",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Set output variables",
+          "skip_execution": false,
+          "variables_to_update": [
+            {
+              "variable_to_update": "$workflow.definition_workflow_01NR65Y06VV1U6zY223SXE6Rae52WhUXuKK.output.variable_workflow_01NR65XZTTAOD3hD2MsLrfhIUyoBIL0ir7Z$",
+              "variable_value_new": "$activity.definition_activity_01NR65YGD1656415FQKBscpZvyfz4HsrTgl.output.response_body$"
+            }
+          ]
+        },
+        "object_type": "definition_activity"
+      }
+    ],
+    "categories": [
+      "category_1BMfMXSnJMyt5Ihqi7rWJr5N8cf",
+      "category_01NSVQ3I7KAC91UswmYqhF821IBEyoUSyDY"
+    ]
+  },
+  "categories": {
+    "category_01NSVQ3I7KAC91UswmYqhF821IBEyoUSyDY": {
+      "unique_name": "category_01NSVQ3I7KAC91UswmYqhF821IBEyoUSyDY",
+      "name": "SXO_hackathon",
+      "title": "SXO_hackathon",
+      "type": "basic.category",
+      "base_type": "category",
+      "category_type": "custom",
+      "object_type": "category"
+    }
+  }
+}
