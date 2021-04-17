@@ -30,35 +30,26 @@ This is a set of SecureX orchestrator workflows to take action on [OPENC2 comman
 - CTR_For_Access_Token (default)
 - CTR_API (default)
 - Cisco Webex 
-- Cisco Secure Firewall (Firepower)
+- Cisco Secure Firewall (Firepower) [REMOTE CONNECTOR NEEDED]
 - Cisco Umbrella
 - Cisco Secure Endpoint (AMP)
-- Cisco Identity Services Engine
+- Hashicorp Vault
 
 ## Required Account Keys
-- CTR_Credentials
-- Webex Teams Token
-
-## Required Global Variables
-- Last Run Timestamp
+- Depends on using Vault or not, but at minimum Vault keys, and otherwise keys for all targets.
 
 ## Required Atomic Workflows
-- CTRGenerateAccessToken
+- Threat Response v2 - Generate Access Token
+- Threat Response v2 - Create Casebook
 - Webex Teams - Post Message to Room
+- FMC - Get Access Tokens
+- [AMP_add_to_block_list.json](https://raw.githubusercontent.com/chrivand/securex_openc2cisco/main/atomics/AMP_add_to_block_list.json)
+- [fmc_update_dynamic_object.json](https://raw.githubusercontent.com/chrivand/securex_openc2cisco/main/atomics/fmc_update_dynamic_object.json)
+- [hashicorp_vault_read_keys.json](https://raw.githubusercontent.com/chrivand/securex_openc2cisco/main/atomics/hashicorp_vault_read_keys.json)
+- [openc2_parser.json](https://raw.githubusercontent.com/chrivand/securex_openc2cisco/main/atomics/openc2_parser.json)
+- [umbrella_add_to_enforcement_block_list.json](https://raw.githubusercontent.com/chrivand/securex_openc2cisco/main/atomics/umbrella_add_to_enforcement_block_list.json)
 
 ## Setup instructions
-
-### Configure Global Variables
-
-1. Browse to your SecureX orchestration instance. This wille be a different URL depending on the region your account is in: 
-
-* US: https://securex-ao.us.security.cisco.com/orch-ui/workflows/
-* EU: https://securex-ao.eu.security.cisco.com/orch-ui/workflows/
-* APJC: https://securex-ao.apjc.security.cisco.com/orch-ui/workflows/
-
-2. In the left hand menu, select **Variables**.
-
-3. Next steps.
 
 ### Import atomic actions
 
@@ -66,7 +57,7 @@ This is a set of SecureX orchestrator workflows to take action on [OPENC2 comman
 
 ![](screenshots/import-workflow.png)
 
-2. Click on **Browse** and copy paste the content of the [name-json-file.json](https://raw.githubusercontent.com/github-username/name-of-repo/master/name-json-file.json) file inside of the text window. Select **IMPORT AS A NEW WORKFLOW (CLONE)** and click on **IMPORT**.
+2. Click on **Browse** and copy paste the content of the [atomics](https://github.com/chrivand/securex_openc2cisco/tree/main/atomics) files inside of the text window (one by one). Select **IMPORT AS A NEW WORKFLOW (CLONE)** and click on **IMPORT**.
 
 ![](screenshots/copy-paste.png)
 
@@ -74,15 +65,17 @@ This is a set of SecureX orchestrator workflows to take action on [OPENC2 comman
 
 1. In the left pane menu, select **Workflows**. Click on **IMPORT** to import the workflow.
 
-2. Click on **Browse** and copy paste the content of the [name-json-file.json](https://raw.githubusercontent.com/github-username/name-of-repo/master/name-json-file.json) file inside of the text window.  Select **IMPORT AS A NEW WORKFLOW (CLONE)** and click on **IMPORT**.
+2. Click on **Browse** and copy paste the content of the [main_workflow.json](https://raw.githubusercontent.com/chrivand/securex_openc2cisco/main/main_workflow.json) file inside of the text window.  Select **IMPORT AS A NEW WORKFLOW (CLONE)** and click on **IMPORT**.
 
-3. Next steps, like updating targets / account keys and setting a trigger / running the workflow.
+3. Now you will need to make sure that you have all required targets and account keys. If you are using vault, you can easily retrieve them using the "Read Vault Secrets" atomic action and then reference them later.
 
 ## Notes
 
 * Please test this properly before implementing in a production environment. This is a sample workflow!
-* In a future version capability X will be added. 
 
 ## Author(s)
 
-* Name of Author (Cisco / Name of Company)
+* Kareem Iskander (Cisco)
+* Krishan Veer (Cisco)
+* Pieter van Schaik (Cisco)
+* Christopher van der Made (Cisco)
