@@ -1,0 +1,292 @@
+{
+  "workflow": {
+    "unique_name": "definition_workflow_01MR1KH1546F61qK62JYIzvnyKo1bvwE0OO",
+    "name": "OpenC2 Translator to Response [CHRIVAND]",
+    "title": "OpenC2 Translator to Response [CHRIVAND]",
+    "type": "generic.workflow",
+    "base_type": "workflow",
+    "variables": [
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "input",
+          "name": "OpenC2_JSON",
+          "type": "datatype.string",
+          "description": "e.g.:\n\n{\n    \"action\": \"deny\",\n    \"target\": {\n        \"ipv4_connection\": {\n            \"protocol\": \"tcp\",\n            \"src_addr\": \"1.2.3.4\",\n            \"src_port\": 10996,\n            \"dst_addr\": \"198.2.3.4\",\n            \"dst_port\": 80\n        }\n    },\n    \"args\": {\n        \"start_time\": 1534775460000,\n        \"duration\": 500,\n        \"response_requested\": \"ack\",\n        \"slpf\": {\n            \"drop_process\": \"none\"\n        }\n    },\n    \"actuator\": {\n        \"slpf\": {\n            \"asset_id\": \"30\"\n        }\n    }\n}\n",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01MR1L363MT763uPt5lbaVMtYaDbZTZNWDh",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "output",
+          "name": "FMC_IP_json",
+          "type": "datatype.string",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01N47AN338S251eB9MVdIBYc5eX9QxfJCLu",
+        "object_type": "variable_workflow"
+      }
+    ],
+    "properties": {
+      "atomic": {
+        "atomic_group": "Atomic",
+        "is_atomic": true
+      },
+      "delete_workflow_instance": false,
+      "display_name": "OpenC2 Translator to Response [CHRIVAND]",
+      "runtime_user": {
+        "override_target_runtime_user": false,
+        "specify_on_workflow_start": false,
+        "target_default": true
+      },
+      "target": {
+        "execute_on_target_group": false,
+        "execute_on_workflow_target": false,
+        "no_target": true,
+        "specify_on_workflow_start": false
+      }
+    },
+    "object_type": "definition_workflow",
+    "actions": [
+      {
+        "unique_name": "definition_activity_01MR1L9T5RPQM151m553ess1CoEc3S3TN6k",
+        "name": "JSONPath Query",
+        "title": "Parse OpenC2 JSON",
+        "type": "corejava.jsonpathquery",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 180,
+          "continue_on_failure": false,
+          "display_name": "Parse OpenC2 JSON",
+          "input_json": "$workflow.definition_workflow_01MR1KH1546F61qK62JYIzvnyKo1bvwE0OO.input.variable_workflow_01MR1L363MT763uPt5lbaVMtYaDbZTZNWDh$",
+          "jsonpath_queries": [
+            {
+              "jsonpath_query": "$.action",
+              "jsonpath_query_name": "openc2_action",
+              "jsonpath_query_type": "string"
+            },
+            {
+              "jsonpath_query": "$.target.ipv4_net.IPv4-Addr",
+              "jsonpath_query_name": "openc2_target",
+              "jsonpath_query_type": "string"
+            },
+            {
+              "jsonpath_query": "$.args",
+              "jsonpath_query_name": "openc2_args",
+              "jsonpath_query_type": "string"
+            },
+            {
+              "jsonpath_query": "$.actuator",
+              "jsonpath_query_name": "openc2_actuator",
+              "jsonpath_query_type": "string"
+            }
+          ],
+          "skip_execution": false
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01N3PK2XABD0E56hx2P39FGDlj2708X2bYn",
+        "name": "Condition Block",
+        "title": "TARGET TYPE IP ADDRESS?",
+        "type": "logic.if_else",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "TARGET TYPE IP ADDRESS?",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01N3PK349P0R475T8PcFypiR6Oc23iQrKHo",
+            "name": "Condition Branch",
+            "title": "NO",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$activity.definition_activity_01MR1L9T5RPQM151m553ess1CoEc3S3TN6k.output.jsonpath_queries.openc2_target$",
+                "operator": "eq",
+                "right_operand": ""
+              },
+              "continue_on_failure": false,
+              "display_name": "NO",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01N3PKFQY8OMN6OJTfBIpmDLsXOfDNux224",
+                "name": "Completed",
+                "title": "Kill script, no IP found",
+                "type": "logic.completed",
+                "base_type": "activity",
+                "properties": {
+                  "completion_type": "failed-completed",
+                  "continue_on_failure": false,
+                  "display_name": "Kill script, no IP found",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "unique_name": "definition_activity_01N3OM98OOXR76vAeFAgIHLiXHpAngl9oyn",
+        "name": "Condition Block",
+        "title": "WHAT TYPE OF ACTION?",
+        "type": "logic.if_else",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "WHAT TYPE OF ACTION?",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01N3OM9B3NYLS66hNYMW7TOLGk2nnAYKpXJ",
+            "name": "Condition Branch",
+            "title": "DENY",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$activity.definition_activity_01MR1L9T5RPQM151m553ess1CoEc3S3TN6k.output.jsonpath_queries.openc2_action$",
+                "operator": "eq",
+                "right_operand": "deny"
+              },
+              "continue_on_failure": false,
+              "display_name": "DENY",
+              "skip_execution": true
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01N4767K2QXVJ5kWx4JRAPh5oZdlfCWYwvc",
+                "name": "Set Variables",
+                "title": "Set FMC JSON",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Set FMC JSON",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01MR1KH1546F61qK62JYIzvnyKo1bvwE0OO.output.variable_workflow_01N47AN338S251eB9MVdIBYc5eX9QxfJCLu$",
+                      "variable_value_new": "{\n\"action\": \"deny\",\n\"FMC_JSON\": {\n\"type\": \"Network\",\n\"value\": $activity.definition_activity_01MR1L9T5RPQM151m553ess1CoEc3S3TN6k.output.jsonpath_queries.openc2_target$\n}\n}"
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          },
+          {
+            "unique_name": "definition_activity_01NDUXHLU317C6i7g8Eo5NXStasqcEFZSBN",
+            "name": "Condition Branch",
+            "title": "DENY",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$activity.definition_activity_01MR1L9T5RPQM151m553ess1CoEc3S3TN6k.output.jsonpath_queries.openc2_action$",
+                "operator": "eq",
+                "right_operand": "deny"
+              },
+              "continue_on_failure": false,
+              "display_name": "DENY",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01NDUXHNZRAEB6JmP7GTVc7wRNVwjTpoA1C",
+                "name": "Set Variables",
+                "title": "Set FMC JSON",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Set FMC JSON",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01MR1KH1546F61qK62JYIzvnyKo1bvwE0OO.output.variable_workflow_01N47AN338S251eB9MVdIBYc5eX9QxfJCLu$",
+                      "variable_value_new": "$activity.definition_activity_01MR1L9T5RPQM151m553ess1CoEc3S3TN6k.output.jsonpath_queries.openc2_target$"
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          },
+          {
+            "unique_name": "definition_activity_01N3OM9CC8D6B2D7elJZqMpFvqzYhWV3806",
+            "name": "Condition Branch",
+            "title": "ALLOW",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$activity.definition_activity_01MR1L9T5RPQM151m553ess1CoEc3S3TN6k.output.jsonpath_queries.openc2_action$",
+                "operator": "eq",
+                "right_operand": "allow"
+              },
+              "continue_on_failure": false,
+              "display_name": "ALLOW",
+              "skip_execution": true
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01N47QD7CIBZW4Nr63fuYpBQh4wAMQxVXGZ",
+                "name": "Set Variables",
+                "title": "Set FMC JSON",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Set FMC JSON",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01MR1KH1546F61qK62JYIzvnyKo1bvwE0OO.output.variable_workflow_01N47AN338S251eB9MVdIBYc5eX9QxfJCLu$",
+                      "variable_value_new": "{\n\"action\": \"allow\",\n\"FMC_JSON\": {\n\"type\": \"Network\",\n\"value\": $activity.definition_activity_01MR1L9T5RPQM151m553ess1CoEc3S3TN6k.output.jsonpath_queries.openc2_target$\n}\n}"
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "categories": [
+      "category_01NSVQ3I7KAC91UswmYqhF821IBEyoUSyDY"
+    ]
+  },
+  "categories": {
+    "category_01NSVQ3I7KAC91UswmYqhF821IBEyoUSyDY": {
+      "unique_name": "category_01NSVQ3I7KAC91UswmYqhF821IBEyoUSyDY",
+      "name": "SXO_hackathon",
+      "title": "SXO_hackathon",
+      "type": "basic.category",
+      "base_type": "category",
+      "category_type": "custom",
+      "object_type": "category"
+    }
+  }
+}
