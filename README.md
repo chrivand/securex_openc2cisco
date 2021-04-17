@@ -1,7 +1,7 @@
 ![License: CISCO](https://img.shields.io/badge/License-CISCO-blue.svg)
 [![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/<REPO-HERE>)
 
-# Cisco SecureX orchestrator workflows to take action on OPENC2 command and controls
+# Cisco SecureX orchestrator workflows to take action on OpenC2 command and controls ("OpenC2Cisco" or "OC2C")
 This is a set of SecureX orchestrator workflows to take action on [OPENC2 command and controls](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.html).
 
 
